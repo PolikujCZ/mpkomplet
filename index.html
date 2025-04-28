@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MojeProdukty - E-shop</title>
+  <meta name="description" content="Nakupujte kvalitní produkty za skvělé ceny. Rychlý nákup s moderním košíkem.">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script>
+    let cart = [];
+
+    function addToCart(name, price) {
+      cart.push({ name, price });
+      updateCartCount();
+    }
+
+    function updateCartCount() {
+      document.getElementById('cart-count').textContent = cart.length;
+    }
+
+    function openCart() {
+      const cartContent = document.getElementById('cart-content');
+      cartContent.innerHTML = '';
+
+      if (cart.length === 0) {
+        cartContent.innerHTML = '<p class="p-4 text-gray-600">Košík je prázdný.</p>';
+      } else {
+        let total = 0;
+        cart.forEach((item, index) => {
+          total += item.price;
+          cartContent.innerHTML += `
+            <div class="flex justify-between items-center p-2 border-b">
+              <div>
+                <p class="font-semibold">${item.name}</p>
+                <p class="text-sm text-gray-500">${item.price} Kč</p>
+              </div>
+              <button onclick="removeFromCart(${index})" class="text-red-500 hover:underline text-sm">Smazat</button>
+            </div>
+          `;
+        });
+        cartContent.innerHTML += `<div class="p-4 font-bold">Celkem: ${total} Kč</div>`;
+      }
+
+      document.getElementById('cart-sidebar').classList.remove('translate-x-full');
+    }
+
+    function closeCart() {
+      document.getElementById('cart-sidebar').classList.add('translate-x-full');
+    }
+
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      updateCartCount();
+      openCart();
+    }
+  </script>
+</head>
+<body class="bg-gray-100 relative overflow-x-hidden">
+
+  <!-- Header -->
+  <header class="bg-white shadow p-4 flex justify-between items-center">
+    <h1 class="text-2xl font-bold text-blue-600">MojeProdukty</h1>
+    <div class="flex gap-4">
+      <input id="search" type="text" placeholder="Hledat produkty..." class="border rounded p-2 w-60 hidden md:block">
+      <button onclick="openCart()" class="relative bg-blue-500 text-white px-4 py-2 rounded">
+        Košík (<span id="cart-count">0</span>)
+      </button>
+    </div>
+  </header>
+
+  <!-- Products -->
+  <main class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+    <div class="bg-white rounded shadow p-4 flex flex-col items-center">
+      <img src="https://via.placeholder.com/300" alt="Produkt 1" class="rounded mb-2">
+      <h2 class="text-xl font-semibold">Produkt 1</h2>
+      <p class="text-gray-600">Skvělý produkt za 299 Kč.</p>
+      <button onclick="addToCart('Produkt 1', 299)" class="mt-2 bg-green-500 text-white px-4 py-2 rounded">Přidat do košíku</button>
+    </div>
+
+    <div class="bg-white rounded shadow p-4 flex flex-col items-center">
+      <img src="https://via.placeholder.com/300" alt="Produkt 2" class="rounded mb-2">
+      <h2 class="text-xl font-semibold">Produkt 2</h2>
+      <p class="text-gray-600">Kvalitní volba za 499 Kč.</p>
+      <button onclick="addToCart('Produkt 2', 499)" class="mt-2 bg-green-500 text-white px-4 py-2 rounded">Přidat do košíku</button>
+    </div>
+
+    <div class="bg-white rounded shadow p-4 flex flex-col items-center">
+      <img src="https://via.placeholder.com/300" alt="Produkt 3" class="rounded mb-2">
+      <h2 class="text-xl font-semibold">Produkt 3</h2>
+      <p class="text-gray-600">Luxus za 899 Kč.</p>
+      <button onclick="addToCart('Produkt 3', 899)" class="mt-2 bg-green-500 text-white px-4 py-2 rounded">Přidat do košíku</button>
+    </div>
+
+  </main>
+
+  <!-- Cart Sidebar -->
+  <aside id="cart-sidebar" class="fixed top-0 right-0 w-80 h-full bg-white shadow-lg transform translate-x-full transition-transform duration-300 z-50">
+    <div class="flex justify-between items-center p-4 border-b">
+      <h2 class="text-xl font-bold">Váš Košík</h2>
+      <button onclick="closeCart()" class="text-red-500 text-2xl">&times;</button>
+    </div>
+    <div id="cart-content" class="overflow-y-auto h-[calc(100%-64px)]">
+      <!-- Košík dynamicky -->
+    </div>
+  </aside>
+
+</body>
+</html>
